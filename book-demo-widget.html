@@ -113,7 +113,7 @@ function initDemoBox() {
     window.dataLayer = window.dataLayer || [];
     // Impression: lets you measure how often each angle was SHOWN.
     window.dataLayer.push({
-        event: 'book_demo_impression',
+        event: 'book_demo_from_blog_impression',
         cta_placement: 'article_demo',
         copy_variant: variant,
         page_language: langKey
@@ -121,7 +121,7 @@ function initDemoBox() {
 
     btn.addEventListener('click', function () {
         window.dataLayer.push({
-            event: 'book_demo_click',
+            event: 'book_demo_from_blog',
             cta_placement: 'article_demo',
             copy_variant: variant,
             page_language: langKey,
