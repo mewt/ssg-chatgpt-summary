@@ -1,0 +1,132 @@
+<!-- ============================================================
+     WIDGET 2C — "Book a Demo" inline form, NO PLUGIN.
+     Fold/unfold form; on submit JS posts the fields to a WEBHOOK.
+     Leads land wherever the webhook points (Make / Zapier / n8n /
+     Google Apps Script / Lark Base). Pure HTML, paste into the hook.
+     JANGAN pakai backslash (WordPress menghapusnya di Custom HTML).
+
+     SETUP: set SSG_WEBHOOK_URL below to your webhook endpoint.
+     Fields mirror /hubungi-kami/.
+     ============================================================ -->
+
+<style id="ssg-demoform-css">
+.ssg-demo{margin:22px 0;padding:20px 2px;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.ssg-demo__bar{display:flex;align-items:center;gap:16px}
+.ssg-demo__icon{flex:none;color:#00a85a;line-height:0}.ssg-demo__icon svg{width:26px;height:26px}
+.ssg-demo__t{flex:1;min-width:0}
+.ssg-demo__h{margin:0;color:#1f2937;font-size:16px;font-weight:700;line-height:1.3}
+.ssg-demo__s{margin:3px 0 0;color:#6b7280;font-size:13.5px;line-height:1.5}
+.ssg-demo button.ssg-demo__btn{flex:none;display:inline-flex;align-items:center;gap:8px;color:#fff !important;background:#00a85a !important;background-image:none !important;border:none !important;border-radius:10px;padding:11px 20px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;box-shadow:0 6px 16px -6px rgba(0,168,90,.6);transition:transform .15s ease,filter .15s ease}
+.ssg-demo button.ssg-demo__btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.ssg-demo__btn .chev{transition:transform .3s ease}
+.ssg-demo[data-open="true"] .ssg-demo__btn .chev{transform:rotate(180deg)}
+.ssg-demo__panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .34s ease}
+.ssg-demo[data-open="true"] .ssg-demo__panel{grid-template-rows:1fr}
+.ssg-demo__panel>div{overflow:hidden}
+.ssg-demo__form{margin-top:16px;background:#e9f9f0;border:1px solid rgba(0,168,90,.22);border-radius:12px;padding:18px;display:grid;gap:12px}
+.ssg-demo__form .fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+.ssg-demo__form label{font-size:12.5px;font-weight:600;color:#1f2937}.ssg-demo__form label .req{color:#c23b3b}
+.ssg-demo__form input,.ssg-demo__form select{font-family:inherit;font-size:14px;color:#1f2937;background:#fff;border:1px solid #d7dce3;border-radius:8px;padding:10px 12px;width:100%;-webkit-appearance:none;appearance:none}
+.ssg-demo__form select{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="%236b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>');background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+.ssg-demo__form input:focus,.ssg-demo__form select:focus{outline:2px solid rgba(0,168,90,.6);border-color:#00a85a}
+.ssg-demo__hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.ssg-demo__frow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:2px}
+.ssg-demo__priv{font-size:11.5px;color:#6b7280;margin:0;max-width:58%}
+.ssg-demo__submit{display:inline-flex;align-items:center;gap:8px;color:#fff;background:#00a85a;border:none;border-radius:9px;padding:11px 22px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:filter .15s ease}
+.ssg-demo__submit:hover{filter:brightness(1.05)}.ssg-demo__submit[disabled]{opacity:.65;cursor:default}
+.ssg-demo__msg{font-size:13px;margin:4px 0 0}.ssg-demo__msg.err{color:#c23b3b}
+.ssg-demo__ok{display:none;margin-top:16px;background:#e9f9f0;border:1px solid rgba(0,168,90,.3);border-radius:12px;padding:18px;color:#047a45;font-weight:600}
+.ssg-demo.sent .ssg-demo__form{display:none}.ssg-demo.sent .ssg-demo__ok{display:block}
+@media(max-width:540px){.ssg-demo__bar{flex-wrap:wrap}.ssg-demo button.ssg-demo__btn{width:100%;justify-content:center;order:3;margin-top:4px}.ssg-demo__priv{max-width:100%}}
+@media(prefers-reduced-motion:reduce){.ssg-demo__panel,.ssg-demo button.ssg-demo__btn,.ssg-demo__btn .chev{transition:none}}
+</style>
+
+<div class="ssg-demo" data-open="false">
+  <div class="ssg-demo__bar">
+    <span class="ssg-demo__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+    <div class="ssg-demo__t">
+      <h3 class="ssg-demo__h">Jadwalkan demo gratis</h3>
+      <p class="ssg-demo__s">Isi langsung di sini, tim kami menghubungi Anda tanpa pindah halaman.</p>
+    </div>
+    <button class="ssg-demo__btn" type="button" aria-expanded="false"><span class="lbl">Jadwalkan Demo</span><svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+  </div>
+  <div class="ssg-demo__panel"><div>
+    <form class="ssg-demo__form" novalidate>
+      <div class="fld"><label>Nama Lengkap <span class="req">*</span></label><input name="fullName" type="text" placeholder="misalnya: Andi Pratama" autocomplete="name" required></div>
+      <div class="fld"><label>WhatsApp <span class="req">*</span></label><input name="phoneNumber" type="tel" inputmode="numeric" placeholder="misalnya : 081234567890" autocomplete="tel" required></div>
+      <div class="fld"><label>Email <span class="req">*</span></label><input name="companyEmail" type="email" placeholder="misalnya: andi@mitrasolusi.co.id" autocomplete="email" required></div>
+      <div class="fld"><label>Nama Perusahaan</label><input name="companyName" type="text" placeholder="misalnya: PT Mitra Solusi Digital" autocomplete="organization"></div>
+      <div class="fld"><label>Jabatan</label><select name="jabatan"><option value="" selected disabled>Pilih jabatan Anda</option><option>HR / People</option><option>Finance / Accounting</option><option>Direktur / Owner</option><option>Operasional</option><option>IT</option><option>Lainnya</option></select></div>
+      <div class="fld"><label>Ukuran Perusahaan</label><select name="companySize"><option value="" selected disabled>Pilih jumlah karyawan</option><option>1-50</option><option>51-100</option><option>101-250</option><option>251-500</option><option>501-1000</option><option>1000+</option></select></div>
+      <div class="ssg-demo__hp"><label>Jangan isi ini<input name="company_website" type="text" tabindex="-1" autocomplete="off"></label></div>
+      <div class="ssg-demo__frow">
+        <p class="ssg-demo__priv">Data Anda hanya dipakai tim Smart Salary untuk menjadwalkan demo.</p>
+        <button class="ssg-demo__submit" type="submit"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="st">Jadwalkan Demo</span></button>
+      </div>
+      <p class="ssg-demo__msg" aria-live="polite"></p>
+    </form>
+    <div class="ssg-demo__ok">✅ Terima kasih! Tim Smart Salary akan menghubungi Anda untuk menjadwalkan demo.</div>
+  </div></div>
+</div>
+
+<script>
+/* CATATAN: tanpa backslash. Ganti URL di bawah dengan webhook Anda. */
+(function(){
+  var SSG_WEBHOOK_URL = "https://PUT-YOUR-WEBHOOK-URL-HERE"; // <-- Make/Zapier/n8n/Apps Script/Lark
+
+  var box = document.currentScript.previousElementSibling;
+  if(!box || !box.classList || !box.classList.contains("ssg-demo")) return;
+  var btn = box.querySelector(".ssg-demo__btn"), lbl = btn.querySelector(".lbl");
+  var form = box.querySelector(".ssg-demo__form");
+  var submit = box.querySelector(".ssg-demo__submit"), stx = submit.querySelector(".st");
+  var msg = box.querySelector(".ssg-demo__msg");
+  var pageLang = (document.documentElement.lang || "en").toLowerCase().slice(0,2);
+
+  btn.addEventListener("click", function(){
+    var open = box.getAttribute("data-open") === "true";
+    box.setAttribute("data-open", String(!open));
+    btn.setAttribute("aria-expanded", String(!open));
+    lbl.textContent = open ? "Jadwalkan Demo" : "Tutup";
+    if(!open){
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({event:"book_demo_open_from_blog", cta_placement:"article_demo_form", page_language:pageLang});
+      setTimeout(function(){ var f = form.querySelector("input"); if(f) f.focus(); }, 320);
+    }
+  });
+
+  // digits-only WhatsApp (same as the live site)
+  var wa = form.querySelector('input[name="phoneNumber"]');
+  wa.addEventListener("input", function(){ this.value = this.value.replace(/[^0-9]/g, ""); });
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    if(form.querySelector('input[name="company_website"]').value) return; // honeypot: silently drop bots
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+
+    var data = {
+      source: "blog",
+      page_url: location.href.split("#")[0].split("?")[0],
+      page_language: pageLang,
+      submitted_at: new Date().toISOString()
+    };
+    new FormData(form).forEach(function(v, k){ if(k !== "company_website") data[k] = v; });
+
+    submit.disabled = true; stx.textContent = "Mengirim..."; msg.textContent = ""; msg.className = "ssg-demo__msg";
+
+    fetch(SSG_WEBHOOK_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    }).then(function(r){
+      if(!r.ok) throw new Error("bad status");
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({event:"book_demo_submit_from_blog", cta_placement:"article_demo_form", page_language:pageLang});
+      box.classList.add("sent");
+    }).catch(function(){
+      submit.disabled = false; stx.textContent = "Jadwalkan Demo";
+      msg.textContent = "Gagal mengirim. Coba lagi, atau hubungi kami via WhatsApp.";
+      msg.className = "ssg-demo__msg err";
+    });
+  });
+})();
+</script>
