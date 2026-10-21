@@ -5,7 +5,7 @@ The "Rangkum dengan ChatGPT" banner shown at the **top of single blog posts** on
 pre-loaded with a summarize prompt for the current article (opens + reads the URL via
 `?hints=search`).
 
-This is the **Variant 2** redesign (green gradient banner) of the original grey box.
+This is the **Variant 3** redesign (minimalist — hairline rules + outline button) of the original grey box.
 
 ## File
 
@@ -30,5 +30,6 @@ This is the **Variant 2** redesign (green gradient banner) of the original grey 
 
 ## Changelog
 
-- **v2** — Variant 2 gradient banner; moved hover to CSS; added translated kicker line.
-  Behavior, languages, analytics, and title/URL logic unchanged from the original.
+- **v3** — Variant 3 minimalist look (hairline top/bottom rules, sparkle mark, outline button).
+  Dropped the kicker line. Behavior, languages, analytics, and title/URL logic unchanged.
+- **v2** — Variant 2 gradient banner (superseded).
