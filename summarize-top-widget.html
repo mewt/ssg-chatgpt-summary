@@ -1,0 +1,148 @@
+<!-- ============================================================
+     WIDGET 1 — Taruh di ATAS artikel (Varian 2: banner gradien)
+     Merangkum artikel lewat ChatGPT (membuka URL & membaca isinya).
+     Tempel apa adanya ke Custom HTML block. JANGAN pakai backslash:
+     WordPress menghapus backslash di Custom HTML block dan merusak
+     regex / escape apa pun. Semua logika di sini bebas backslash.
+     ============================================================ -->
+
+<style id="ssg-banner-css">
+.ssg-banner{position:relative;border-radius:18px;padding:26px;margin:20px 0;color:#fff;overflow:hidden;
+ background:linear-gradient(120deg,#008a4a 0%,#00a85a 45%,#0fb36b 70%,#eaaa07 150%);
+ display:flex;align-items:center;gap:18px;box-shadow:0 18px 40px -18px rgba(0,120,70,.55);
+ font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.ssg-banner::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.12)}
+.ssg-banner__t{flex:1;min-width:0;position:relative;z-index:1}
+.ssg-banner__k{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.92;margin:0 0 4px}
+.ssg-banner__h{margin:0 0 2px;color:#fff;font-size:21px;font-weight:800;letter-spacing:-.01em;line-height:1.2}
+.ssg-banner__s{margin:0;font-size:14px;opacity:.92;line-height:1.5}
+.ssg-banner__btn{position:relative;z-index:1;flex:none;color:#055c35;background:#fff;border:none;border-radius:12px;
+ padding:13px 20px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;
+ box-shadow:0 10px 24px -8px rgba(0,0,0,.3);transition:transform .15s ease,filter .15s ease,box-shadow .15s ease}
+.ssg-banner__btn:hover{transform:translateY(-2px);filter:brightness(1.03);box-shadow:0 14px 30px -10px rgba(0,0,0,.35)}
+.ssg-banner__btn:active{transform:translateY(0)}
+.ssg-banner__btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:540px){.ssg-banner{flex-wrap:wrap}.ssg-banner__btn{width:100%;order:3;margin-top:6px}}
+@media(prefers-reduced-motion:reduce){.ssg-banner__btn{transition:none}.ssg-banner__btn:hover{transform:none}}
+</style>
+
+<div class="ssg-banner">
+    <div class="ssg-banner__t">
+        <div class="ssg-banner__k" id="gpt-box-kicker">Instant Summary</div>
+        <h3 class="ssg-banner__h" id="gpt-box-title">Too long to read?</h3>
+        <p class="ssg-banner__s" id="gpt-box-sub">Let ChatGPT summarize this Smart Salary article for you in seconds.</p>
+    </div>
+    <button class="ssg-banner__btn" id="chatgpt-link-btn" type="button">✨ Summarize Now</button>
+</div>
+
+<script>
+/* CATATAN: tanpa backslash sama sekali. WordPress menghapus backslash
+   di Custom HTML block dan itu merusak regex apa pun di sini. */
+function initGptBox() {
+    var btn = document.getElementById('chatgpt-link-btn');
+    if (!btn || btn.dataset.ready) return;
+    btn.dataset.ready = '1';
+
+    var currentLang = (document.documentElement.lang || 'en').toLowerCase();
+
+    var texts = {
+        en: {
+            kicker: "Instant Summary",
+            title: "Too long to read?",
+            sub: "Let ChatGPT summarize this Smart Salary article for you in seconds.",
+            btn: "✨ Summarize Now",
+            prompt: 'Read this Smart Salary article and summarize it: "%TITLE%" %URL% Give me the key points and what an HR or payroll team should prepare.'
+        },
+        id: {
+            kicker: "Ringkasan Instan",
+            title: "Terlalu panjang untuk dibaca?",
+            sub: "Biar ChatGPT merangkum artikel Smart Salary ini untuk Anda dalam hitungan detik.",
+            btn: "✨ Rangkum Sekarang",
+            prompt: 'Tolong baca dan rangkum artikel Smart Salary ini: "%TITLE%" %URL% Jelaskan poin-poin pentingnya dan apa yang perlu disiapkan tim HR atau payroll.'
+        },
+        th: {
+            kicker: "สรุปทันที",
+            title: "ยาวเกินไปที่จะอ่าน?",
+            sub: "ให้ ChatGPT สรุปบทความ Smart Salary นี้ให้คุณภายในไม่กี่วินาที",
+            btn: "✨ สรุปเลย",
+            prompt: 'ช่วยอ่านและสรุปบทความ Smart Salary นี้: "%TITLE%" %URL% บอกประเด็นสำคัญและสิ่งที่ทีม HR หรือ Payroll ควรเตรียม'
+        },
+        zh: {
+            kicker: "即时摘要",
+            title: "太长懒得看？",
+            sub: "让 ChatGPT 在几秒内为您总结这篇 Smart Salary 文章。",
+            btn: "✨ 立即总结",
+            prompt: '请阅读并总结这篇 Smart Salary 文章：「%TITLE%」%URL% 说明关键要点，以及 HR 或薪酬团队应该准备什么。'
+        }
+    };
+
+    var langKey = 'en';
+    if (currentLang.indexOf('id') === 0) langKey = 'id';
+    else if (currentLang.indexOf('th') === 0) langKey = 'th';
+    else if (currentLang.indexOf('zh') === 0) langKey = 'zh';
+    var t = texts[langKey];
+
+    document.getElementById('gpt-box-kicker').innerText = t.kicker;
+    document.getElementById('gpt-box-title').innerText = t.title;
+    document.getElementById('gpt-box-sub').innerText = t.sub;
+    btn.innerText = t.btn;
+
+    function squash(str) {
+        var out = '', i, c;
+        for (i = 0; i < str.length; i++) {
+            c = str.charCodeAt(i);
+            out += (c === 9 || c === 10 || c === 13) ? ' ' : str.charAt(i);
+        }
+        while (out.indexOf('  ') !== -1) { out = out.split('  ').join(' '); }
+        return out.trim();
+    }
+
+    function stripSiteName(str) {
+        var seps = [' | ', ' - ', ' ' + String.fromCharCode(8211) + ' ', ' ' + String.fromCharCode(8212) + ' '];
+        var i, at, tail;
+        for (i = 0; i < seps.length; i++) {
+            at = str.lastIndexOf(seps[i]);
+            if (at > 0) {
+                tail = str.substring(at + seps[i].length);
+                if (tail.toLowerCase().indexOf('smart salary') !== -1) {
+                    return str.substring(0, at).trim();
+                }
+            }
+        }
+        return str.trim();
+    }
+
+    function metaContent(sel) {
+        var el = document.querySelector(sel);
+        return el ? (el.getAttribute('content') || '').trim() : '';
+    }
+
+    var h1 = document.querySelector('h1');
+    var artTitle = metaContent('meta[property="og:title"]') || (h1 ? h1.innerText : '') || document.title;
+    artTitle = stripSiteName(squash(artTitle));
+
+    var canon = document.querySelector('link[rel="canonical"]');
+    var artUrl = (canon ? canon.href : window.location.href).split('#')[0].split('?')[0];
+
+    btn.addEventListener('click', function () {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'ai_summarize_click',
+            ai_engine: 'chatgpt',
+            ai_placement: 'top_summarize',
+            page_language: langKey,
+            page_url: artUrl
+        });
+        var finalPrompt = squash(t.prompt
+            .replace('%TITLE%', function () { return artTitle; })
+            .replace('%URL%', function () { return artUrl; }));
+        window.open("https://chatgpt.com/?hints=search&q=" + encodeURIComponent(finalPrompt), '_blank', 'noopener');
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGptBox);
+} else {
+    initGptBox();
+}
+</script>
