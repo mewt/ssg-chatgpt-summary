@@ -28,6 +28,15 @@ This is the **Variant 3** redesign (minimalist — hairline rules + outline butt
 - Keep the element IDs (`gpt-box-title`, `gpt-box-sub`, `chatgpt-link-btn`, `gpt-box-kicker`) —
   the script and any GTM triggers rely on them.
 
+## Version B — inline Fluent Forms (book-demo-form.php)
+
+An alternative demo CTA that **unfolds an inline lead form** instead of linking out, so
+visitors fill it without leaving the blog. The form is a **Fluent Forms** shortcode rendered
+server-side inside a fold/unfold accordion; Fluent Forms saves the lead (Entries) via AJAX.
+Fields mirror `/hubungi-kami/`: Nama Lengkap, WhatsApp, Email, Nama Perusahaan, Jabatan,
+Ukuran Perusahaan. Set `SSG_DEMO_FORM_ID` to your form id. dataLayer events:
+`book_demo_open_from_blog` (expand) + `book_demo_submit_from_blog` (saved lead).
+
 ## Changelog
 
 - **v3** — Variant 3 minimalist look (hairline top/bottom rules, sparkle mark, outline button).
