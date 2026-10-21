@@ -1,0 +1,138 @@
+<!-- ============================================================
+     WIDGET 2 — "Book a Demo" CTA (gaya minimalis, selaras Varian 3)
+     ROUND ROBIN: 4 angle copy dirotasi di sisi client tiap load
+     (aman dari page cache). Angle yang tampil dikirim ke dataLayer
+     (impression + click) supaya CTR per-angle bisa diukur di GTM/GA4.
+
+     Tujuan halaman Contact per bahasa:
+       en  -> /my/contact-us/   (English diarahkan ke /my/)
+       id  -> /hubungi-kami/
+       th  -> /th/contact-us/
+       zh  -> /zh/contact-us/
+     Tempel apa adanya ke hook / Custom HTML block. JANGAN pakai
+     backslash: WordPress menghapusnya di Custom HTML block.
+     ============================================================ -->
+
+<style id="ssg-demo-css">
+.ssg-demo{display:flex;align-items:center;gap:16px;margin:22px 0;padding:20px 2px;
+ border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;
+ font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.ssg-demo__icon{flex:none;color:#00a85a;line-height:0}
+.ssg-demo__icon svg{width:26px;height:26px}
+.ssg-demo__t{flex:1;min-width:0}
+.ssg-demo__h{margin:0;color:#1f2937;font-size:16px;font-weight:700;line-height:1.3;text-transform:none}
+.ssg-demo__s{margin:3px 0 0;color:#6b7280;font-size:13.5px;line-height:1.5}
+.ssg-demo__btn{flex:none;color:#fff;background:#00a85a;border:none;border-radius:10px;
+ padding:11px 20px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;text-decoration:none;
+ white-space:nowrap;box-shadow:0 6px 16px -6px rgba(0,168,90,.6);transition:transform .15s ease,filter .15s ease}
+.ssg-demo__btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.ssg-demo__btn:active{transform:translateY(0)}
+.ssg-demo__btn:focus-visible{outline:2px solid #047a45;outline-offset:2px}
+@media(max-width:540px){.ssg-demo{flex-wrap:wrap}.ssg-demo__btn{width:100%;text-align:center;order:3;margin-top:4px}}
+@media(prefers-reduced-motion:reduce){.ssg-demo__btn{transition:none}.ssg-demo__btn:hover{transform:none}}
+</style>
+
+<div class="ssg-demo">
+    <span class="ssg-demo__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+    <div class="ssg-demo__t">
+        <h3 class="ssg-demo__h" id="demo-box-title">Ready to see Smart Salary in action?</h3>
+        <p class="ssg-demo__s" id="demo-box-sub">Book a free demo and see how it fits your team's payroll.</p>
+    </div>
+    <a class="ssg-demo__btn" id="demo-link-btn" href="https://www.smartsalarypro.com/my/contact-us/" target="_blank" rel="noopener">Book a Demo</a>
+</div>
+
+<script>
+/* CATATAN: tanpa backslash sama sekali (WordPress menghapusnya di Custom HTML block). */
+function initDemoBox() {
+    var btn = document.getElementById('demo-link-btn');
+    if (!btn || btn.dataset.ready) return;
+    btn.dataset.ready = '1';
+
+    var urls = {
+        en: "https://www.smartsalarypro.com/my/contact-us/",
+        id: "https://www.smartsalarypro.com/hubungi-kami/",
+        th: "https://www.smartsalarypro.com/th/contact-us/",
+        zh: "https://www.smartsalarypro.com/zh/contact-us/"
+    };
+
+    var copy = {
+        "1": {
+            en: { title:"Ready to see Smart Salary in action?", sub:"Book a free demo and see how it fits your team's payroll.", btn:"Book a Demo" },
+            id: { title:"Siap melihat Smart Salary bekerja langsung?", sub:"Jadwalkan demo gratis dan lihat bagaimana ia cocok untuk payroll tim Anda.", btn:"Jadwalkan Demo" },
+            th: { title:"พร้อมดู Smart Salary ทำงานจริงหรือยัง?", sub:"จองเดโมฟรี แล้วเราจะพาดูว่ามันเหมาะกับระบบ payroll ของทีมคุณอย่างไร", btn:"จองเดโมฟรี" },
+            zh: { title:"想看看 Smart Salary 的实际效果吗？", sub:"预约免费演示，了解它如何契合您团队的薪酬流程。", btn:"预约演示" }
+        },
+        "2": {
+            en: { title:"Tired of attendance vs payroll mismatches?", sub:"See how Smart Salary automates your payroll reconciliation. Free demo.", btn:"Get a Free Demo" },
+            id: { title:"Capek dengan selisih absensi dan gaji?", sub:"Lihat bagaimana Smart Salary mengotomatiskan rekonsiliasi payroll Anda. Demo gratis.", btn:"Coba Demo Gratis" },
+            th: { title:"เบื่อกับข้อมูลลงเวลาและเงินเดือนที่ไม่ตรงกันไหม?", sub:"ดูว่า Smart Salary ช่วยกระทบยอด payroll อัตโนมัติอย่างไร เดโมฟรี", btn:"ทดลองเดโมฟรี" },
+            zh: { title:"还在为考勤与薪资对不上而烦恼吗？", sub:"看看 Smart Salary 如何自动完成薪酬核对。免费演示。", btn:"免费试用演示" }
+        },
+        "3": {
+            en: { title:"15 minutes to cleaner payroll", sub:"Book a short demo. No cost, no commitment.", btn:"Book a Quick Demo" },
+            id: { title:"Cukup 15 menit untuk payroll yang lebih rapi", sub:"Jadwalkan demo singkat, tanpa biaya dan tanpa komitmen.", btn:"Ambil Jadwal Demo" },
+            th: { title:"แค่ 15 นาทีเพื่อ payroll ที่เป็นระเบียบขึ้น", sub:"จองเดโมสั้นๆ ฟรี ไม่มีข้อผูกมัด", btn:"จองเดโมด่วน" },
+            zh: { title:"15 分钟，让薪酬更清爽", sub:"预约简短演示，免费，无需承诺。", btn:"快速预约演示" }
+        },
+        "4": {
+            en: { title:"Questions about your team's payroll?", sub:"Talk to the Smart Salary team in a free, personalized demo.", btn:"Talk to Us" },
+            id: { title:"Punya pertanyaan soal payroll tim Anda?", sub:"Ngobrol langsung dengan tim Smart Salary lewat demo gratis.", btn:"Hubungi Kami" },
+            th: { title:"มีคำถามเกี่ยวกับ payroll ของทีมคุณไหม?", sub:"พูดคุยกับทีม Smart Salary ในเดโมฟรีที่ปรับให้เหมาะกับคุณ", btn:"ติดต่อเรา" },
+            zh: { title:"对您团队的薪酬有疑问吗？", sub:"在免费的专属演示中与 Smart Salary 团队聊聊。", btn:"联系我们" }
+        }
+    };
+
+    var currentLang = (document.documentElement.lang || 'en').toLowerCase();
+    var langKey = 'en';
+    if (currentLang.indexOf('id') === 0) langKey = 'id';
+    else if (currentLang.indexOf('th') === 0) langKey = 'th';
+    else if (currentLang.indexOf('zh') === 0) langKey = 'zh';
+
+    // Round robin: advance a per-browser counter each load. First-ever load
+    // starts at a random angle so new visitors are spread evenly, not all on #1.
+    var total = 4;
+    var idx;
+    try {
+        var raw = window.localStorage.getItem('ssg_demo_rr');
+        idx = (raw === null) ? Math.floor(Math.random() * total) : (parseInt(raw, 10) + 1) % total;
+        window.localStorage.setItem('ssg_demo_rr', String(idx));
+    } catch (e) {
+        idx = Math.floor(Math.random() * total); // private mode / storage blocked
+    }
+    var variant = String(idx + 1);
+
+    var byLang = copy[variant];
+    var c = byLang[langKey] || byLang.en;
+    var url = urls[langKey] || urls.en;
+
+    document.getElementById('demo-box-title').innerText = c.title;
+    document.getElementById('demo-box-sub').innerText = c.sub;
+    btn.innerText = c.btn;
+    btn.href = url;
+
+    window.dataLayer = window.dataLayer || [];
+    // Impression: lets you measure how often each angle was SHOWN.
+    window.dataLayer.push({
+        event: 'book_demo_impression',
+        cta_placement: 'article_demo',
+        copy_variant: variant,
+        page_language: langKey
+    });
+
+    btn.addEventListener('click', function () {
+        window.dataLayer.push({
+            event: 'book_demo_click',
+            cta_placement: 'article_demo',
+            copy_variant: variant,
+            page_language: langKey,
+            demo_url: url
+        });
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDemoBox);
+} else {
+    initDemoBox();
+}
+</script>
